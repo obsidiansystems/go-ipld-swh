@@ -1,3 +1,4 @@
 *.so
+/gen/gen
 /result
 /vendor
