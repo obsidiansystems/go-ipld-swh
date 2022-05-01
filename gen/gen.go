@@ -62,7 +62,7 @@ func main() {
 		"alias": "SnapshotBranch_Alias",
 	})))
 
-	ts.Accumulate(schema.SpawnMap("Snapshot", "BranchName", "SnapshotBranch", false))
+	ts.Accumulate(schema.SpawnMap("Snapshot", "BranchName", "SnapshotBranch", true))
 
 	ts.Accumulate(schema.SpawnLinkReference("Snapshot_Link", "Snapshot"))
 

@@ -59,12 +59,12 @@ type _Link struct{ x ipld.Link }
 // Snapshot matches the IPLD Schema type "Snapshot".  It has map kind.
 type Snapshot = *_Snapshot
 type _Snapshot struct {
-	m map[_BranchName]*_SnapshotBranch
+	m map[_BranchName]MaybeSnapshotBranch
 	t []_Snapshot__entry
 }
 type _Snapshot__entry struct {
 	k _BranchName
-	v _SnapshotBranch
+	v _SnapshotBranch__Maybe
 }
 
 // SnapshotBranch matches the IPLD Schema type "SnapshotBranch".

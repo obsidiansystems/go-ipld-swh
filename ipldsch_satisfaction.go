@@ -427,17 +427,17 @@ func (n *_Snapshot) Lookup(k BranchName) SnapshotBranch {
 	if !exists {
 		return nil
 	}
-	return v
+	if v.m == schema.Maybe_Null {
+		return nil
+	}
+	return v.v
 }
 func (n *_Snapshot) LookupMaybe(k BranchName) MaybeSnapshotBranch {
 	v, exists := n.m[*k]
 	if !exists {
 		return &_Snapshot__valueAbsent
 	}
-	return &_SnapshotBranch__Maybe{
-		m: schema.Maybe_Value,
-		v: v,
-	}
+	return v
 }
 
 var _Snapshot__valueAbsent = _SnapshotBranch__Maybe{m: schema.Maybe_Absent}
@@ -451,7 +451,7 @@ type Snapshot__Itr struct {
 	idx int
 }
 
-func (itr *Snapshot__Itr) Next() (k BranchName, v SnapshotBranch) {
+func (itr *Snapshot__Itr) Next() (k BranchName, v MaybeSnapshotBranch) {
 	if itr.idx >= len(itr.n.t) {
 		return nil, nil
 	}
@@ -514,7 +514,10 @@ func (n Snapshot) LookupByString(k string) (ipld.Node, error) {
 	if !exists {
 		return nil, ipld.ErrNotExists{Segment: ipld.PathSegmentOfString(k)}
 	}
-	return v, nil
+	if v.m == schema.Maybe_Null {
+		return ipld.Null, nil
+	}
+	return v.v, nil
 }
 func (n Snapshot) LookupByNode(k ipld.Node) (ipld.Node, error) {
 	k2, ok := k.(BranchName)
@@ -526,7 +529,10 @@ func (n Snapshot) LookupByNode(k ipld.Node) (ipld.Node, error) {
 	if !exists {
 		return nil, ipld.ErrNotExists{Segment: ipld.PathSegmentOfString(k2.String())}
 	}
-	return v, nil
+	if v.m == schema.Maybe_Null {
+		return ipld.Null, nil
+	}
+	return v.v, nil
 }
 func (Snapshot) LookupByIndex(idx int64) (ipld.Node, error) {
 	return mixins.Map{TypeName: "ipldswh.Snapshot"}.LookupByIndex(0)
@@ -549,7 +555,12 @@ func (itr *_Snapshot__MapItr) Next() (k ipld.Node, v ipld.Node, _ error) {
 	}
 	x := &itr.n.t[itr.idx]
 	k = &x.k
-	v = &x.v
+	switch x.v.m {
+	case schema.Maybe_Null:
+		v = ipld.Null
+	case schema.Maybe_Value:
+		v = x.v.v
+	}
 	itr.idx++
 	return
 }
@@ -641,7 +652,7 @@ func (na *_Snapshot__Assembler) BeginMap(sizeHint int64) (ipld.MapAssembler, err
 	if sizeHint < 0 {
 		sizeHint = 0
 	}
-	na.w.m = make(map[_BranchName]*_SnapshotBranch, sizeHint)
+	na.w.m = make(map[_BranchName]MaybeSnapshotBranch, sizeHint)
 	na.w.t = make([]_Snapshot__entry, 0, sizeHint)
 	return na, nil
 }
@@ -724,8 +735,8 @@ func (ma *_Snapshot__Assembler) keyFinishTidy() bool {
 		ma.cm = schema.Maybe_Absent
 		ma.state = maState_expectValue
 		ma.w.m[tz.k] = &tz.v
-		ma.va.w = &tz.v
-		ma.va.m = &ma.cm
+		ma.va.m = &tz.v.m
+		tz.v.m = allowNull
 		ma.ka.reset()
 		return true
 	default:
@@ -733,10 +744,15 @@ func (ma *_Snapshot__Assembler) keyFinishTidy() bool {
 	}
 }
 func (ma *_Snapshot__Assembler) valueFinishTidy() bool {
-	switch ma.cm {
+	tz := &ma.w.t[len(ma.w.t)-1]
+	switch tz.v.m {
+	case schema.Maybe_Null:
+		ma.state = maState_initial
+		ma.va.reset()
+		return true
 	case schema.Maybe_Value:
+		tz.v.v = ma.va.w
 		ma.va.w = nil
-		ma.cm = schema.Maybe_Absent
 		ma.state = maState_initial
 		ma.va.reset()
 		return true
@@ -772,8 +788,8 @@ func (ma *_Snapshot__Assembler) AssembleEntry(k string) (ipld.NodeAssembler, err
 	ma.state = maState_midValue
 
 	ma.w.m[k2] = &tz.v
-	ma.va.w = &tz.v
-	ma.va.m = &ma.cm
+	ma.va.m = &tz.v.m
+	tz.v.m = allowNull
 	return &ma.va, nil
 }
 func (ma *_Snapshot__Assembler) AssembleKey() ipld.NodeAssembler {
@@ -975,7 +991,7 @@ func (na *_Snapshot__ReprAssembler) BeginMap(sizeHint int64) (ipld.MapAssembler,
 	if sizeHint < 0 {
 		sizeHint = 0
 	}
-	na.w.m = make(map[_BranchName]*_SnapshotBranch, sizeHint)
+	na.w.m = make(map[_BranchName]MaybeSnapshotBranch, sizeHint)
 	na.w.t = make([]_Snapshot__entry, 0, sizeHint)
 	return na, nil
 }
@@ -1058,8 +1074,8 @@ func (ma *_Snapshot__ReprAssembler) keyFinishTidy() bool {
 		ma.cm = schema.Maybe_Absent
 		ma.state = maState_expectValue
 		ma.w.m[tz.k] = &tz.v
-		ma.va.w = &tz.v
-		ma.va.m = &ma.cm
+		ma.va.m = &tz.v.m
+		tz.v.m = allowNull
 		ma.ka.reset()
 		return true
 	default:
@@ -1067,10 +1083,15 @@ func (ma *_Snapshot__ReprAssembler) keyFinishTidy() bool {
 	}
 }
 func (ma *_Snapshot__ReprAssembler) valueFinishTidy() bool {
-	switch ma.cm {
+	tz := &ma.w.t[len(ma.w.t)-1]
+	switch tz.v.m {
+	case schema.Maybe_Null:
+		ma.state = maState_initial
+		ma.va.reset()
+		return true
 	case schema.Maybe_Value:
+		tz.v.v = ma.va.w
 		ma.va.w = nil
-		ma.cm = schema.Maybe_Absent
 		ma.state = maState_initial
 		ma.va.reset()
 		return true
@@ -1106,8 +1127,8 @@ func (ma *_Snapshot__ReprAssembler) AssembleEntry(k string) (ipld.NodeAssembler,
 	ma.state = maState_midValue
 
 	ma.w.m[k2] = &tz.v
-	ma.va.w = &tz.v
-	ma.va.m = &ma.cm
+	ma.va.m = &tz.v.m
+	tz.v.m = allowNull
 	return &ma.va, nil
 }
 func (ma *_Snapshot__ReprAssembler) AssembleKey() ipld.NodeAssembler {
