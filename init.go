@@ -21,11 +21,11 @@ var (
 		return nil
 	}
 	e ipld.Encoder = func(n ipld.Node, w io.Writer) error {
-		builder := Type.Snapshot.NewBuilder()
-		if err := builder.AssignNode(n); err != nil {
+		var assembler _Snapshot__ReprAssembler
+		if err := assembler.AssignNode(n); err != nil {
 			return err
 		}
-		return Encode(builder.Build().(Snapshot), w)
+		return Encode(assembler.w, w)
 	}
 )
 
