@@ -160,7 +160,7 @@ func DecodeSnapshotBranch(rd *bufio.Reader) (string, MaybeSnapshotBranch, error)
 	return raw.key, te, nil
 }
 
-func encodeSnapshot(s Snapshot, w io.Writer) error {
+func EncodeSnapshot(s Snapshot, w io.Writer) error {
 	buf := new(bytes.Buffer)
 
 	for key, te := range s.m {
@@ -174,7 +174,7 @@ func encodeSnapshot(s Snapshot, w io.Writer) error {
 		}
 	}
 	cnt := buf.Len()
-	if _, err := fmt.Fprintf(w, "snapshot %d\x00", cnt); err != nil {
+	if _, err := fmt.Fprintf(w, "%d\x00", cnt); err != nil {
 		return err
 	}
 
