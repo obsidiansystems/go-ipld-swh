@@ -1,4 +1,4 @@
-module github.com/ipfs/go-ipld-swh
+module github.com/obsidiansystems/go-ipld-swh
 
 go 1.16
 
