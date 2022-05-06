@@ -35,6 +35,6 @@ func DecodeGeneric(na ipld.NodeAssembler, r io.Reader) error {
 	if err != nil {
 		return err
 	}
-	na.AssignNode(x)
+	na.AssignNode(x.Representation())
 	return nil
 }
