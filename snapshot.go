@@ -18,6 +18,9 @@ func DecodeSnapshot(rd *bufio.Reader) (Snapshot, error) {
 	}
 
 	var r _Snapshot
+	r.m = make(map[_BranchName]MaybeSnapshotBranch)
+	r.t = make([]_Snapshot__entry, 0)
+
 	for {
 		if _, err := rd.Peek(1); err == io.EOF {
 			break
