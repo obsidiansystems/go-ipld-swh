@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+
+	"github.com/ipld/go-ipld-prime"
 )
 
 // Decode produces an Snapshot from a stream / binary represnetation.
@@ -26,4 +28,13 @@ func Decode(r io.Reader) (Snapshot, error) {
 	default:
 		return nil, fmt.Errorf("unrecognized object type: %q", typ)
 	}
+}
+
+func DecodeGeneric(na ipld.NodeAssembler, r io.Reader) error {
+	x, err := Decode(r)
+	if err != nil {
+		return err
+	}
+	na.AssignNode(x)
+	return nil
 }
