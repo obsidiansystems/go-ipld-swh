@@ -3,9 +3,7 @@ module github.com/obsidiansystems/go-ipld-swh
 go 1.16
 
 require (
-	github.com/ipfs/go-block-format v0.0.3 // indirect
-	github.com/ipfs/go-cid v0.0.7
-	github.com/ipfs/go-ipld-git v0.1.1
-	github.com/ipld/go-ipld-prime v0.11.0
-	github.com/multiformats/go-multihash v0.0.15
+	github.com/ipfs/go-cid v0.1.0
+	github.com/ipld/go-ipld-prime v0.14.2
+	github.com/multiformats/go-multihash v0.1.0
 )
