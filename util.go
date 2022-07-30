@@ -4,8 +4,8 @@ import (
 	"github.com/ipfs/go-cid"
 	"github.com/ipld/go-ipld-prime"
 	cidlink "github.com/ipld/go-ipld-prime/linking/cid"
-	mh "github.com/multiformats/go-multihash"
 	mc "github.com/multiformats/go-multicodec"
+	mh "github.com/multiformats/go-multihash"
 )
 
 func gitShaToCid(sha []byte) cid.Cid {
