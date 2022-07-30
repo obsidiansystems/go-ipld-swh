@@ -5,10 +5,7 @@ import (
 	"github.com/ipld/go-ipld-prime"
 	cidlink "github.com/ipld/go-ipld-prime/linking/cid"
 	mh "github.com/multiformats/go-multihash"
-)
-
-const (
-	Swh1Snp = 0x01f0
+	mc "github.com/multiformats/go-multicodec"
 )
 
 func gitShaToCid(sha []byte) cid.Cid {
@@ -18,7 +15,7 @@ func gitShaToCid(sha []byte) cid.Cid {
 
 func swh1SnpShaToCid(sha []byte) cid.Cid {
 	h, _ := mh.Encode(sha, mh.SHA1)
-	return cid.NewCidV1(Swh1Snp, h)
+	return cid.NewCidV1((uint64)(mc.Swhid1Snp), h)
 }
 
 func cidToSha(c cid.Cid) []byte {

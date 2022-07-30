@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/ipfs/go-cid v0.2.0
 	github.com/ipld/go-ipld-prime v0.17.0
+	github.com/multiformats/go-multicodec v0.5.0
 	github.com/multiformats/go-multihash v0.2.0
 )
 

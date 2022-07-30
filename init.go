@@ -5,7 +5,8 @@ package ipldswh
 
 import (
 	"github.com/ipld/go-ipld-prime"
-	mc "github.com/ipld/go-ipld-prime/multicodec"
+	mc2 "github.com/ipld/go-ipld-prime/multicodec"
+	mc "github.com/multiformats/go-multicodec"
 )
 
 var (
@@ -14,6 +15,6 @@ var (
 )
 
 func init() {
-	mc.RegisterEncoder(Swh1Snp, EncodeGeneric)
-	mc.RegisterDecoder(Swh1Snp, DecodeGeneric)
+	mc2.RegisterEncoder((uint64)(mc.Swhid1Snp), EncodeGeneric)
+	mc2.RegisterDecoder((uint64)(mc.Swhid1Snp), DecodeGeneric)
 }
